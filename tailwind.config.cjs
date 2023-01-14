@@ -1,10 +1,10 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [],
+  content: [
+    "./index.html",
+    "./src/**/*.{vue,js,ts,jsx,tsx}",
+  ],
   theme: {
-    container: {
-      center: true,
-    },
     extend: {
       colors: {
         'moderate-blue': 'hsl(238, 40%, 52%)',
@@ -18,8 +18,12 @@ module.exports = {
         'very-light-gray': 'hsl(228, 33%, 97%)',
         'white': 'hsl(0, 0%, 100%)',
       },
+      maxWidth: {
+        'card': '730px',
+      },
       screens: {
         'desktop': '1440px',
+        'mobile': '375px',
       },
       fontFamily: {
         'sans': ['Rubik']
