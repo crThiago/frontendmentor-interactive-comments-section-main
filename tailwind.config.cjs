@@ -18,6 +18,9 @@ module.exports = {
         'very-light-gray': 'hsl(228, 33%, 97%)',
         'white': 'hsl(0, 0%, 100%)',
       },
+      width: {
+        'card': '730px',
+      },
       maxWidth: {
         'card': '730px',
       },

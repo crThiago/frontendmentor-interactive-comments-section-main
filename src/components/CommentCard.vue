@@ -1,13 +1,17 @@
 <script setup>
+import { ref } from 'vue'
+
 defineProps({
   comment: Object,
   currentUser: Object
 })
+
+const edit = ref(false)
 </script>
 
 <template>
-  <div class="flex flex-col mb-5 p-4 rounded-lg bg-white sm:flex-row-reverse">
-    <div>
+  <div class="w-card flex flex-col mb-5 p-4 rounded-lg bg-white sm:flex-row-reverse">
+    <div class="w-full sm:w-11/12">
       <div class="flex justify-between items-center mb-4">
         <div class="flex items-center">
           <img class="w-8 mr-3.5" :src="comment.user.image.webp">
@@ -21,7 +25,7 @@ defineProps({
             <button class="inline-flex items-center mr-4 font-bold text-soft-red hover:text-pale-red">
               <img class="w-4 mr-2" src="./assets/icon-delete.svg"> Delete
             </button>
-            <button class="inline-flex items-center font-bold text-moderate-blue hover:text-light-grayish-blue">
+            <button @click="edit = true" class="inline-flex items-center font-bold text-moderate-blue hover:text-light-grayish-blue">
               <img class="w-4 mr-2" src="./assets/icon-edit.svg"> Edit
             </button>
           </div>
@@ -31,7 +35,17 @@ defineProps({
           </button>
         </div>
       </div>
-      <p class="text-grayish-blue mb-4">{{ comment.content }}</p>
+      <div>
+        <p v-show="!edit" class="text-grayish-blue mb-4">{{ comment.content }}</p>
+        <div v-if="currentUser.username === comment.user.username" v-show="edit" class="text-right">
+          <textarea
+              v-model="comment.content"
+              class="w-full h-24 px-4 py-3 mb-4 border border-grayish-blue rounded"
+              placeholder="Edit your comment..."
+          />
+          <button @click="edit = false" class="px-4 py-2 bg-moderate-blue text-white rounded-lg font-semibold">UPDATE</button>
+        </div>
+      </div>
     </div>
 
     <div class="mr-6">
