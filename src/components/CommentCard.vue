@@ -1,16 +1,30 @@
 <script setup>
-import { ref } from 'vue'
+import {onMounted, ref} from 'vue'
+import CommentControls from "./CommentControls.vue";
 
-defineProps({
+const props = defineProps({
   comment: Object,
   currentUser: Object
 })
 
 const edit = ref(false)
+const currentStore = ref(props.comment.score)
+
+function incrementScore() {
+  if (props.comment.score <= currentStore.value && props.comment.user.username !== props.currentUser.username) {
+    props.comment.score += 1
+  }
+}
+
+function decrementScore() {
+  if (props.comment.score >= currentStore.value && props.comment.user.username !== props.currentUser.username) {
+    props.comment.score -= 1
+  }
+}
 </script>
 
 <template>
-  <div class="w-card flex flex-col mb-5 p-4 rounded-lg bg-white sm:flex-row-reverse">
+  <div class="flex flex-col mb-5 p-4 rounded-lg bg-white sm:flex-row-reverse sm:w-card">
     <div class="w-full sm:w-11/12">
       <div class="flex justify-between items-center mb-4">
         <div class="flex items-center">
@@ -21,21 +35,15 @@ const edit = ref(false)
         </div>
 
         <div class="hidden sm:block">
-          <div v-if="currentUser.username === comment.user.username">
-            <button class="inline-flex items-center mr-4 font-bold text-soft-red hover:text-pale-red">
-              <img class="w-4 mr-2" src="./assets/icon-delete.svg"> Delete
-            </button>
-            <button @click="edit = true" class="inline-flex items-center font-bold text-moderate-blue hover:text-light-grayish-blue">
-              <img class="w-4 mr-2" src="./assets/icon-edit.svg"> Edit
-            </button>
-          </div>
-
-          <button v-else class="inline-flex items-center font-bold text-moderate-blue hover:text-light-grayish-blue">
-            <img class="w-4 mr-2" src="./assets/icon-reply.svg"> Reply
-          </button>
+          <CommentControls
+              :current-username="currentUser.username"
+              :comment-username="comment.user.username"
+              @edit="edit = true"
+              @delete="$emit('delete', comment.id)"
+          />
         </div>
       </div>
-      <div>
+      <div class="mb-4 sm:mb-0">
         <p v-show="!edit" class="text-grayish-blue mb-4">{{ comment.content }}</p>
         <div v-if="currentUser.username === comment.user.username" v-show="edit" class="text-right">
           <textarea
@@ -48,15 +56,23 @@ const edit = ref(false)
       </div>
     </div>
 
-    <div class="mr-6">
+    <div class="flex items-center justify-between sm:mr-6">
       <div class="inline-flex rounded-lg bg-light-gray sm:flex-col">
-        <button class="flex justify-center px-3 py-2 text-light-grayish-blue hover:text-moderate-blue">
+        <button @click="incrementScore" class="flex justify-center px-3 py-2 text-light-grayish-blue hover:text-moderate-blue">
           <img class="w-3" src="./assets/icon-plus.svg">
         </button>
         <span class="w-10 px-3 py-2 text-center text-moderate-blue">{{ comment.score }}</span>
-        <button class="flex justify-center px-3 py-2 text-light-grayish-blue hover:text-moderate-blue">
+        <button @click="decrementScore" class="flex justify-center px-3 py-2 text-light-grayish-blue hover:text-moderate-blue">
           <img class="w-3" src="./assets/icon-minus.svg">
         </button>
+      </div>
+      <div class="block sm:hidden">
+        <CommentControls
+            :current-username="currentUser.username"
+            :comment-username="comment.user.username"
+            @edit="edit = true"
+            @delete="$emit('delete', comment.id)"
+        />
       </div>
     </div>
   </div>
