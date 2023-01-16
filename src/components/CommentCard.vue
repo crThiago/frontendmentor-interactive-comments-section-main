@@ -1,6 +1,7 @@
 <script setup>
 import {onMounted, ref} from 'vue'
 import CommentControls from "./CommentControls.vue";
+defineEmits(['delete'])
 
 const props = defineProps({
   comment: Object,
@@ -8,6 +9,7 @@ const props = defineProps({
 })
 
 const edit = ref(false)
+const reply = ref(false)
 const currentStore = ref(props.comment.score)
 
 function incrementScore() {
@@ -20,6 +22,21 @@ function decrementScore() {
   if (props.comment.score >= currentStore.value && props.comment.user.username !== props.currentUser.username) {
     props.comment.score -= 1
   }
+}
+
+const replyText = ref('')
+function createReply() {
+  props.comment.replies.push({
+    "id": props.comment.replies.length + 1,
+    "content": replyText.value,
+    "createdAt": "now",
+    "score": 0,
+    "replyingTo": props.comment.user.username,
+    "user": {
+      ...props.currentUser,
+    }
+  })
+  reply.value = false
 }
 </script>
 
@@ -40,6 +57,7 @@ function decrementScore() {
               :comment-username="comment.user.username"
               @edit="edit = true"
               @delete="$emit('delete', comment.id)"
+              @reply="reply = !reply"
           />
         </div>
       </div>
@@ -56,7 +74,7 @@ function decrementScore() {
       </div>
     </div>
 
-    <div class="flex items-center justify-between sm:mr-6">
+    <div class="flex items-center justify-between sm:mr-6 sm:items-start">
       <div class="inline-flex rounded-lg bg-light-gray sm:flex-col">
         <button @click="incrementScore" class="flex justify-center px-3 py-2 text-light-grayish-blue hover:text-moderate-blue">
           <img class="w-3" src="./assets/icon-plus.svg">
@@ -72,8 +90,19 @@ function decrementScore() {
             :comment-username="comment.user.username"
             @edit="edit = true"
             @delete="$emit('delete', comment.id)"
+            @reply="reply = !reply"
         />
       </div>
     </div>
+  </div>
+
+  <div v-show="reply === true" class="flex items-start mb-5 p-4 rounded-lg bg-white sm:w-card">
+    <img class="w-8" :src="currentUser.image.webp" alt="Current User Photo">
+    <textarea
+        v-model="replyText"
+        class="w-full h-24 px-4 py-3 ml-3 border border-grayish-blue rounded"
+        placeholder="Add a new comment...">
+    </textarea>
+    <button @click="createReply" class="px-4 py-2 bg-moderate-blue text-white rounded-lg font-semibold">REPLY</button>
   </div>
 </template>

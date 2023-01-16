@@ -15,7 +15,7 @@ defineProps({
     </button>
   </div>
 
-  <button v-else class="inline-flex items-center font-bold text-moderate-blue hover:text-light-grayish-blue">
+  <button @click="$emit('reply', true)" v-else class="inline-flex items-center font-bold text-moderate-blue hover:text-light-grayish-blue">
     <img class="w-4 mr-2" src="./assets/icon-reply.svg"> Reply
   </button>
 </template>
