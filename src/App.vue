@@ -2,11 +2,25 @@
 import { ref } from 'vue'
 import data from './assets/data.json'
 import CommentCard from './components/CommentCard.vue'
+import DoCommentCard from './components/DoCommentCard.vue'
 
 defineEmits(['deleteComment'])
 
 const currentUser = data.currentUser
 const comments = ref(data.comments)
+
+function createComment(text) {
+  comments.value.push({
+    "id": comments.value.length + 1,
+    "content": text,
+    "createdAt": "now",
+    "score": 0,
+    "user": {
+      ...currentUser,
+    },
+    "replies": []
+  })
+}
 
 function deleteComment(id) {
   comments.value = comments.value.filter(comment => comment.id !== id)
@@ -30,5 +44,10 @@ function deleteReply(id) {
         <CommentCard :comment="reply" :current-user="currentUser" @delete="deleteReply" />
       </div>
     </div>
+
+    <DoCommentCard
+      :current-user="currentUser"
+      @create-comment="createComment"
+    />
   </div>
 </template>

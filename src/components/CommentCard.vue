@@ -1,6 +1,8 @@
 <script setup>
 import {onMounted, ref} from 'vue'
 import CommentControls from "./CommentControls.vue";
+import DoCommentCard from "./DoCommentCard.vue";
+
 defineEmits(['delete'])
 
 const props = defineProps({
@@ -24,11 +26,10 @@ function decrementScore() {
   }
 }
 
-const replyText = ref('')
-function createReply() {
+function createReply(text) {
   props.comment.replies.push({
     "id": props.comment.replies.length + 1,
-    "content": replyText.value,
+    "content": text,
     "createdAt": "now",
     "score": 0,
     "replyingTo": props.comment.user.username,
@@ -41,13 +42,18 @@ function createReply() {
 </script>
 
 <template>
-  <div class="flex flex-col mb-5 p-4 rounded-lg bg-white sm:flex-row-reverse sm:w-card">
+  <div class="flex flex-col mt-5 p-4 rounded-lg bg-white sm:flex-row-reverse sm:w-card">
     <div class="w-full sm:w-11/12">
       <div class="flex justify-between items-center mb-4">
         <div class="flex items-center">
           <img class="w-8 mr-3.5" :src="comment.user.image.webp">
           <span class="mr-2 font-bold">{{ comment.user.username }}</span>
-          <span v-if="currentUser.username === comment.user.username" class="px-2 py-0.5 mr-2 text-xs bg-moderate-blue text-white font-bold rounded-sm">you</span>
+          <span
+              v-if="currentUser.username === comment.user.username"
+              class="px-2 py-0.5 mr-2 text-xs bg-moderate-blue text-white font-bold rounded-sm"
+          >
+            you
+          </span>
           <span class="ml-2 text-grayish-blue">{{ comment.createdAt }}</span>
         </div>
 
@@ -62,7 +68,15 @@ function createReply() {
         </div>
       </div>
       <div class="mb-4 sm:mb-0">
-        <p v-show="!edit" class="text-grayish-blue mb-4">{{ comment.content }}</p>
+        <p v-show="!edit" class="text-grayish-blue mb-4">
+          <span
+              v-if="comment.replyingTo"
+              class="font-bold text-moderate-blue"
+          >
+            @{{ comment.replyingTo }}
+          </span>
+          {{ comment.content }}
+        </p>
         <div v-if="currentUser.username === comment.user.username" v-show="edit" class="text-right">
           <textarea
               v-model="comment.content"
@@ -96,13 +110,10 @@ function createReply() {
     </div>
   </div>
 
-  <div v-show="reply === true" class="flex items-start mb-5 p-4 rounded-lg bg-white sm:w-card">
-    <img class="w-8" :src="currentUser.image.webp" alt="Current User Photo">
-    <textarea
-        v-model="replyText"
-        class="w-full h-24 px-4 py-3 ml-3 border border-grayish-blue rounded"
-        placeholder="Add a new comment...">
-    </textarea>
-    <button @click="createReply" class="px-4 py-2 bg-moderate-blue text-white rounded-lg font-semibold">REPLY</button>
-  </div>
+  <DoCommentCard
+      v-if="reply"
+      is-reply
+      :currentUser="currentUser"
+      @create-comment="createReply"
+  />
 </template>
