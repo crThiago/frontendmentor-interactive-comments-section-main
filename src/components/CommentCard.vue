@@ -2,6 +2,8 @@
 import {onMounted, ref} from 'vue'
 import CommentControls from "./CommentControls.vue";
 import DoCommentCard from "./DoCommentCard.vue";
+import Button from "./Button.vue";
+import Card from "./Card.vue";
 
 defineEmits(['delete'])
 
@@ -42,7 +44,7 @@ function createReply(text) {
 </script>
 
 <template>
-  <div class="flex flex-col mt-5 p-4 rounded-lg bg-white sm:flex-row-reverse sm:w-card">
+  <Card class="flex-col sm:flex-row-reverse">
     <div class="w-full sm:w-11/12">
       <div class="flex justify-between items-center mb-4">
         <div class="flex items-center">
@@ -55,7 +57,7 @@ function createReply(text) {
             you
           </span>
           <span class="ml-2 text-grayish-blue">{{ comment.createdAt }}</span>
-        </div>
+      </div>
 
         <div class="hidden sm:block">
           <CommentControls
@@ -83,7 +85,7 @@ function createReply(text) {
               class="w-full h-24 px-4 py-3 mb-4 border border-grayish-blue rounded"
               placeholder="Edit your comment..."
           />
-          <button @click="edit = false" class="px-4 py-2 bg-moderate-blue text-white rounded-lg font-semibold">UPDATE</button>
+          <Button @click="edit = false">Update</Button>
         </div>
       </div>
     </div>
@@ -108,7 +110,7 @@ function createReply(text) {
         />
       </div>
     </div>
-  </div>
+  </Card>
 
   <DoCommentCard
       v-if="reply"
