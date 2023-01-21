@@ -39,9 +39,9 @@ function deleteReply(id) {
     <div v-for="comment in comments" :key="comment.id">
       <CommentCard :comment="comment" :current-user="currentUser" @delete="deleteComment"/>
 
-      <div v-for="reply in comment.replies" :key="reply.id" class="flex flex-wrap">
-        <span class="mr-4 border-r-2 sm:mx-10"></span>
-        <CommentCard :comment="reply" :current-user="currentUser" @delete="deleteReply" />
+      <div v-for="reply in comment.replies" :key="reply.id" class="flex flex-wrap justify-between">
+        <span class="w-1/12 border-l-2 sm:w-auto sm:mx-[5%]"></span>
+        <CommentCard class="w-11/12 sm:w-[89%]" :comment="reply" :current-user="currentUser" @delete="deleteReply" />
       </div>
     </div>
 
