@@ -1,13 +1,14 @@
 <script setup>
-import {onMounted, ref} from 'vue'
+import { ref } from 'vue'
 import CommentControls from "./CommentControls.vue";
 import DoCommentCard from "./DoCommentCard.vue";
 import Button from "./Button.vue";
 import Card from "./Card.vue";
 
-defineEmits(['delete'])
+const emits = defineEmits(['create-reply', 'delete'])
 
 const props = defineProps({
+  commentId: Number,
   comment: Object,
   currentUser: Object
 })
@@ -29,16 +30,7 @@ function decrementScore() {
 }
 
 function createReply(text) {
-  props.comment.replies.push({
-    "id": props.comment.replies.length + 1,
-    "content": text,
-    "createdAt": "now",
-    "score": 0,
-    "replyingTo": props.comment.user.username,
-    "user": {
-      ...props.currentUser,
-    }
-  })
+  emits('create-reply', props.commentId, text)
   reply.value = false
 }
 </script>
@@ -49,7 +41,7 @@ function createReply(text) {
       <div class="w-full sm:w-11/12">
         <div class="flex justify-between items-center mb-4">
           <div class="flex items-center">
-            <img class="w-8 mr-3.5" :src="comment.user.image.webp">
+            <img class="w-8 mr-3.5" :src="comment.user.image.webp" alt="user avatar">
             <span class="mr-2 font-bold">{{ comment.user.username }}</span>
             <span
                 v-if="currentUser.username === comment.user.username"
