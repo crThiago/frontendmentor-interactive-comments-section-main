@@ -86,7 +86,6 @@ function createReply(text) {
       <div class="flex items-center justify-between sm:mr-6 sm:items-start">
         <div class="inline-flex rounded-lg bg-light-gray sm:flex-col">
           <button
-              role="button"
               @click="incrementScore"
               class="flex justify-center px-3 py-2 text-light-grayish-blue hover:text-moderate-blue icon-plus"
               title="Upvote"
@@ -94,7 +93,6 @@ function createReply(text) {
           </button>
           <span class="w-10 px-3 py-2 text-center text-moderate-blue">{{ comment.score }}</span>
           <button
-              role="button"
               @click="decrementScore"
               class="flex justify-center px-3 py-2 text-light-grayish-blue hover:text-moderate-blue icon-minus"
               title="Down-vote"
